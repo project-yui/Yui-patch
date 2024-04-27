@@ -1,0 +1,8 @@
+build
+node_modules
+vcpkg_installed
+ntqq
+cache
+tmp
+*.exp
+*.lib
