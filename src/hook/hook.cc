@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <winnt.h>
 #include <winuser.h>
 
 
@@ -46,10 +47,9 @@ HANDLE WINAPI Hk_CreateFileW(
             errno_t err = mbstowcs_s(&retlen, defaultIndex, cap / sizeof(wchar_t), DEFAULT_INDEX, _TRUNCATE);
             // MessageBoxA(NULL, "convert over\0", NULL, 0);
             if (err == 0) {
-                return Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-            }
-            else {
-                return Org_CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+                HANDLE ret = Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+                free(defaultIndex);
+                return ret;
             }
 
             // MessageBoxA(NULL, msg, NULL, 0);
@@ -57,7 +57,7 @@ HANDLE WINAPI Hk_CreateFileW(
             // sprintf(msg, "read result: %d\0", readResult);
             // MessageBoxA(NULL, msg, NULL, 0);
             // 释放
-            free(defaultIndex);
+            
         }
         
     }
