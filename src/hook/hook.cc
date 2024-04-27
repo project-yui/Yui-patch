@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <cstring>
+#include <fileapi.h>
 #include <minwindef.h>
 #include <psapi.h>
 #include "../include/nt.hh"
@@ -15,6 +16,7 @@
 
 static def_CreateFileW Org_CreateFileW = NULL;
 static def_ReadFile Org_ReadFile = NULL;
+static int i = 0;
 
 HANDLE WINAPI Hk_CreateFileW(
     _In_           LPCWSTR                lpFileName,
@@ -32,15 +34,32 @@ HANDLE WINAPI Hk_CreateFileW(
     printf("filename: %s\n", filename.c_str());
 
     if (filename.find("app_launcher\\index.js") != std::string::npos) {
-        MessageBoxA(NULL, filename.c_str(), NULL, 0);
-        int cap = strlen(DEFAULT_INDEX) * 2 + 1;
-        wchar_t *defaultIndex = (wchar_t *)malloc(cap);
-        size_t retlen = 0;
-        mbstowcs_s(&retlen, defaultIndex, cap, DEFAULT_INDEX, cap - 1);
-        HANDLE ret = Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-        MessageBoxExW(NULL, defaultIndex, NULL, 0, 0);
-        free(defaultIndex);
-        return ret;
+        if (i < 1){
+            i++;
+            // 文件名
+            // MessageBoxA(NULL, filename.c_str(), NULL, 0);
+
+            int cap = (strlen(DEFAULT_INDEX) + 1) * sizeof(wchar_t);
+            wchar_t *defaultIndex = (wchar_t *)malloc(cap);
+            size_t retlen = 0;
+            
+            errno_t err = mbstowcs_s(&retlen, defaultIndex, cap / sizeof(wchar_t), DEFAULT_INDEX, _TRUNCATE);
+            // MessageBoxA(NULL, "convert over\0", NULL, 0);
+            if (err == 0) {
+                return Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+            }
+            else {
+                return Org_CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+            }
+
+            // MessageBoxA(NULL, msg, NULL, 0);
+            // BOOL readResult = ReadFile(ret, msg, 20, NULL, NULL);
+            // sprintf(msg, "read result: %d\0", readResult);
+            // MessageBoxA(NULL, msg, NULL, 0);
+            // 释放
+            free(defaultIndex);
+        }
+        
     }
 
     return Org_CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
