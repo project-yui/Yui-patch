@@ -40,11 +40,16 @@ HANDLE WINAPI Hk_CreateFileW(
             // 文件名
             // MessageBoxA(NULL, filename.c_str(), NULL, 0);
 
-            int cap = (strlen(DEFAULT_INDEX) + 1) * sizeof(wchar_t);
+            char	strTmpPath[MAX_PATH];
+            GetTempPath(sizeof(strTmpPath), strTmpPath);
+            strcat_s(strTmpPath, DEFAULT_INDEX);
+
+            int cap = (strlen(strTmpPath) + 1) * sizeof(wchar_t);
             wchar_t *defaultIndex = (wchar_t *)malloc(cap);
             size_t retlen = 0;
             
-            errno_t err = mbstowcs_s(&retlen, defaultIndex, cap / sizeof(wchar_t), DEFAULT_INDEX, _TRUNCATE);
+            
+            errno_t err = mbstowcs_s(&retlen, defaultIndex, cap / sizeof(wchar_t), strTmpPath, _TRUNCATE);
             // MessageBoxA(NULL, "convert over\0", NULL, 0);
             if (err == 0) {
                 HANDLE ret = Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
