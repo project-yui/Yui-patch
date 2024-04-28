@@ -62,7 +62,7 @@ HANDLE WINAPI Hk_CreateFileW(
             // sprintf(msg, "read result: %d\0", readResult);
             // MessageBoxA(NULL, msg, NULL, 0);
             // 释放
-            
+            free(defaultIndex);
         }
         
     }
