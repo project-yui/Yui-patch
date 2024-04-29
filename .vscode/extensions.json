@@ -2,6 +2,7 @@
     "recommendations": [
         "ms-vscode.cmake-tools",
         "llvm-vs-code-extensions.vscode-clangd",
-        "peterj.proto"
+        "peterj.proto",
+        "kevinkyang.auto-comment-blocks"
     ]
 }

@@ -1,4 +1,6 @@
 
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 #include <windows.h>
 #include <winuser.h>
 #include "./include/hook.hh"
@@ -6,10 +8,12 @@
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
+    spdlog::info("DllMain !");
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
     {
+        spdlog::info("DLL_PROCESS_ATTACH !");
         create_default_file();
         start_hook();
         break;

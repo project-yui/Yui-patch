@@ -1,7 +1,6 @@
 #ifndef __HOOK_H__
 #define __HOOK_H__
 #include <windows.h>
-
 HANDLE WINAPI Hk_CreateFileW(
     _In_           LPCWSTR                lpFileName,
     _In_           DWORD                 dwDesiredAccess,

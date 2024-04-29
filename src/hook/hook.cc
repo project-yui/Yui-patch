@@ -3,21 +3,35 @@
 #include <cstdlib>
 #include <cstring>
 #include <fileapi.h>
+#include <map>
 #include <minwindef.h>
 #include <psapi.h>
 #include "../include/nt.hh"
-#include "../include/const.hh"
 #include "../include/hook.hh"
+#include <spdlog/spdlog.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <winnt.h>
 #include <winuser.h>
+#include <direct.h>
+#include <filesystem>
+#include "../include/redirect.hh"
 
 
 static def_CreateFileW Org_CreateFileW = NULL;
 static def_ReadFile Org_ReadFile = NULL;
-static int i = 0;
+
+std::map<std::string, RedirectInfo> config = {
+    {
+            std::string("program\\resources\\app\\app_launcher\\index.js"),
+            {
+                std::string("index.js"),
+                "require('./launcher.node').load('external_index', module);",
+                0, 0, 1
+            }
+        },
+};
 
 HANDLE WINAPI Hk_CreateFileW(
     _In_           LPCWSTR                lpFileName,
@@ -32,39 +46,59 @@ HANDLE WINAPI Hk_CreateFileW(
     size_t len;
     wcstombs_s(&len, path, MAX_PATH, lpFileName, wcslen(lpFileName));
     std::string filename(path, len);
-    printf("filename: %s\n", filename.c_str());
+    spdlog::info("full filename: {}", filename.c_str());
+    
+    std::filesystem::path p(filename);
 
-    if (filename.find("app_launcher\\index.js") != std::string::npos) {
-        if (i < 1){
-            i++;
+    if (p.is_absolute())
+    {
+        // 绝对路径
+        // 获取当前目录
+        char * cwd = _getcwd(NULL, 0);
+        spdlog::info("cwd: {}", cwd);
+        // if (filename.find("\\\\?\\") == 0) {
+        //     filename.replace(0, 5, "");
+        // }
+        filename.replace(0, strlen(cwd) + 1, "");
+        spdlog::info("relative filename: {}", filename.c_str());
+    }
+
+    if (config.find(filename.c_str()) != config.end())
+    {
+        spdlog::info("File config was found: {}", filename);
+        auto directData = config[filename.c_str()];
+        if (directData.cur >= directData.start && directData.cur < directData.end)
+        {
+            spdlog::info("Redirect for: {}", filename);
+            directData.cur++;
             // 文件名
-            // MessageBoxA(NULL, filename.c_str(), NULL, 0);
 
-            char	strTmpPath[MAX_PATH];
-            GetTempPath(sizeof(strTmpPath), strTmpPath);
-            strcat_s(strTmpPath, DEFAULT_INDEX);
+            const char	*strTmpPath = directData.target.c_str();
 
             int cap = (strlen(strTmpPath) + 1) * sizeof(wchar_t);
             wchar_t *defaultIndex = (wchar_t *)malloc(cap);
             size_t retlen = 0;
             
-            
             errno_t err = mbstowcs_s(&retlen, defaultIndex, cap / sizeof(wchar_t), strTmpPath, _TRUNCATE);
-            // MessageBoxA(NULL, "convert over\0", NULL, 0);
+
             if (err == 0) {
                 HANDLE ret = Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
                 free(defaultIndex);
                 return ret;
             }
 
-            // MessageBoxA(NULL, msg, NULL, 0);
             // BOOL readResult = ReadFile(ret, msg, 20, NULL, NULL);
-            // sprintf(msg, "read result: %d\0", readResult);
-            // MessageBoxA(NULL, msg, NULL, 0);
+            spdlog::info("read result: {}\n", err);
             // 释放
             free(defaultIndex);
         }
+        else {
+            spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target, directData.cur, directData.start, directData.end);
+        }
         
+    }
+    else {
+        spdlog::info("Can not find file config: {}", filename.c_str());
     }
 
     return Org_CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
