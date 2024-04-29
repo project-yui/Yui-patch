@@ -16,69 +16,12 @@ on:
   # workflow_dispatch:
 
 jobs:
-  build-linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.x]
-        arch: ['x86_64']
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm
-        with:
-          version: latest
-          run_install: false
-      - name: run-vcpkg
-        uses: lukka/run-vcpkg@v11.5
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v2
-        with:
-          cmake-version: '3.16.x'
-
-      - name: Prepare
-        run: |
-          pnpm install --no-frozen-lockfile
-
-      - name: Generate TAG
-        id: Tag
-        run: |
-          tag='continuous'
-          name='Continuous Build'
-          if [ 'true' == ${{ startsWith(github.ref, 'refs/tags/') }} ];then
-            tag='${{ github.ref_name }}'
-            name='${{ github.ref_name }}'
-          fi
-          echo "tag result: $tag - $name"
-          echo "::set-output name=tag::$tag"
-          echo "::set-output name=name::$name"
-         
-      - name: Build
-        run: |
-          tools/linux/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2.3.1
-        with:
-          # Artifact name
-          name: telecord-${{ matrix.arch }}.build
-          path: tmp/build
-
   build-windows:
     name: Build Windows
     runs-on: windows-latest
 
     strategy:
       matrix:
-        node-version: [16.x]
         arch: ['x86_64']
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
@@ -86,13 +29,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-      - uses: pnpm/action-setup@v3
-        name: Install pnpm
-        with:
-          version: latest
-          run_install: false
 
       - name: Generate TAG
         id: Tag
@@ -109,9 +45,7 @@ jobs:
          
       - name: run-vcpkg
         uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
-      - name: Prepare
-        run: |
-          pnpm install --no-frozen-lockfile
+
       - uses: TheMrMilchmann/setup-msvc-dev@v3
         with:
           arch: ${{ matrix.arch }}
@@ -129,7 +63,6 @@ jobs:
   upload:
     name: Create release and upload artifacts
     needs:
-      - build-linux
       - build-windows
     runs-on: ubuntu-latest
     steps:
