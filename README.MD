@@ -17,6 +17,18 @@
 
 1. 构建生成 `dbghelp.dll` 文件
 2. 放置于Telecord目录
+3. 创建patch.json文件写入内容：
+    ```json
+    {
+        "program\\resources\\app\\app_launcher\\index.js": {
+            "target": "index.default.js",
+            "content": "require('./launcher.node').load('external_index', module);",
+            "cur": 0,
+            "start": 0,
+            "end": 1
+        }
+    }
+    ```
 
 ### 注意
 
@@ -37,10 +49,10 @@ Q: 为什么不显示在控制台呢？
 
 A：我也想，不知道怎么弄。
 
-## 任务
+## 功能实现
 
 - [x] 配置化映射
-- [ ] 读取配置文件 
+- [x] 读取配置文件 
 
 ## 声明
 

@@ -14,6 +14,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
     case DLL_PROCESS_ATTACH:
     {
         spdlog::info("DLL_PROCESS_ATTACH !");
+        load_configuration();
         create_default_file();
         start_hook();
         break;

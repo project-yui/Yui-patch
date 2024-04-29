@@ -22,16 +22,17 @@
 static def_CreateFileW Org_CreateFileW = NULL;
 static def_ReadFile Org_ReadFile = NULL;
 
-std::map<std::string, RedirectInfo> config = {
-    {
-            std::string("program\\resources\\app\\app_launcher\\index.js"),
-            {
-                std::string("index.js"),
-                "require('./launcher.node').load('external_index', module);",
-                0, 0, 1
-            }
-        },
-};
+std::map<std::string, RedirectInfo> config;
+//  = {
+//     {
+//             std::string("program\\resources\\app\\app_launcher\\index.js"),
+//             {
+//                 std::string("index.js"),
+//                 "require('./launcher.node').load('external_index', module);",
+//                 0, 0, 1
+//             }
+//         },
+// };
 
 HANDLE WINAPI Hk_CreateFileW(
     _In_           LPCWSTR                lpFileName,

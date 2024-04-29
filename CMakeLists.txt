@@ -27,7 +27,7 @@ message("LD_LIBRARY_PATH:" ${LD_LIBRARY_PATH})
 
 find_package(minhook CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-
+find_package(jsoncpp CONFIG REQUIRED)
 
 add_library(dbghelp
     SHARED
@@ -35,6 +35,9 @@ add_library(dbghelp
     ./src/init.cc
     ./src/hook/hook.cc
     )
+
 target_link_libraries(dbghelp PRIVATE minhook::minhook)
 target_link_libraries(dbghelp PRIVATE spdlog::spdlog)
+target_link_libraries(dbghelp PRIVATE JsonCpp::JsonCpp)
+
 SET_TARGET_PROPERTIES(dbghelp PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\GitHub\\Yukihana\\program")
