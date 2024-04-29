@@ -74,7 +74,7 @@ void create_default_file()
     spdlog::info("temp path: {}", strTmpPath);
 
     for (auto& cfg: config) {
-        auto redirectData = cfg.second;
+        auto& redirectData = cfg.second;
         std::filesystem::path p(redirectData.target);
         if (p.is_absolute())
         {
@@ -119,6 +119,7 @@ void create_default_file()
                 redirectData.target = t.string();
                 if (exists_test(redirectData.target))
                 {
+                    spdlog::info("exists: {}", redirectData.target);
                     return;
                 }
                 std::ofstream fsn(redirectData.target, std::ios_base::out);

@@ -75,6 +75,7 @@ HANDLE WINAPI Hk_CreateFileW(
             // 文件名
 
             const char	*strTmpPath = directData.target.c_str();
+            spdlog::info("Redirect to: {}", strTmpPath);
 
             int cap = (strlen(strTmpPath) + 1) * sizeof(wchar_t);
             wchar_t *defaultIndex = (wchar_t *)malloc(cap);
