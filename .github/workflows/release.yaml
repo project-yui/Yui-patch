@@ -93,7 +93,7 @@ jobs:
           wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
           chmod +x pyuploadtool-x86_64.AppImage
           ./pyuploadtool-x86_64.AppImage \
-          **build/*.node
+          **build/*.dll
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -104,4 +104,4 @@ jobs:
           name: ${{ steps.tag.outputs.name }}
           tag_name: ${{ steps.tag.outputs.tag }}
           files: |
-            **build/*.node
+            **build/*.dll
