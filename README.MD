@@ -10,7 +10,7 @@
 
 ### 基本原理
 
-1. 创建一个默认的 `index.default.js`，内容未安装时的 `index.js` 内容; 而 `index.js` 则为修改的内容。
+1. 创建一个默认的 `index.default.js`，内容为安装时的 `index.js` 内容; 而 `index.js` 则为修改的内容。
 2. 拦截CreateFileW
 3. 如果第一次访问 `index.js`，判定为校验文件，返回 `index.default.js` 的fd
 4. 否则返回 `index.js` 的fd
@@ -71,7 +71,6 @@ A：我也想，不知道怎么弄。
 
 - [x] 配置化映射
 - [x] 读取配置文件
-- [ ] 关闭文件时，删除程序创建的文件
 
 ## 声明
 
