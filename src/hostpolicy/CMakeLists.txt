@@ -2,6 +2,12 @@
 enable_language(ASM)
 set(ASM_COMPILER "ml64")
 
+if(MSVC)
+    set(MY_VERSIONINFO_RC "${CMAKE_BINARY_DIR}/VersionInfo.rc")
+    configure_file("./VersionInfo.rc.in"
+                   "${MY_VERSIONINFO_RC}")
+endif()
+
 set(ASM_SOURCE_FILES ./hostpolicy_jump.asm)
 # 添加自定义命令来编译汇编文件
 foreach(ASM_FILE ${ASM_SOURCE_FILES})
@@ -24,9 +30,10 @@ add_library("${NAME}"
     ../config/init.cc
     ../hook/hook.cc
     ${OBJECT_FILES}
+    ${MY_VERSIONINFO_RC}
     )
 target_link_libraries("${NAME}" PRIVATE minhook::minhook)
 target_link_libraries("${NAME}" PRIVATE spdlog::spdlog)
 target_link_libraries("${NAME}" PRIVATE JsonCpp::JsonCpp)
 
-# SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.9.0\\resources\\app\\out\\WebServer")
+SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.9.0\\resources\\app\\out\\WebServer")
