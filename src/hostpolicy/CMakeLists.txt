@@ -29,4 +29,4 @@ target_link_libraries("${NAME}" PRIVATE minhook::minhook)
 target_link_libraries("${NAME}" PRIVATE spdlog::spdlog)
 target_link_libraries("${NAME}" PRIVATE JsonCpp::JsonCpp)
 
-SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.9.0\\resources\\app\\out\\WebServer")
+# SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.9.0\\resources\\app\\out\\WebServer")

@@ -1,1 +1,2 @@
-add_subdirectory(hostpolicy dbghelp)
+add_subdirectory(hostpolicy)
+add_subdirectory(dbghelp)
