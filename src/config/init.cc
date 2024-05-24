@@ -1,5 +1,6 @@
-#include "./include/init.hh"
+#include "../include/init.hh"
 #include <Windows.h>
+#include <direct.h>
 #include <filesystem>
 #include <fstream>
 #include <ios>
@@ -59,6 +60,15 @@ void load_configuration()
                 if (end.asInt())
                 {
                     info.end = end.asInt();
+                }
+                std::filesystem::path p(key);
+                if (p.is_relative())
+                {
+                    char * cwd = _getcwd(NULL, 0);
+                    spdlog::info("reaolve relative path: {}, cwd: {}", key.c_str(), cwd);
+                    auto p1 = std::filesystem::canonical(key);
+                    key = p1.string();
+                    spdlog::info("absolute path: {}", key.c_str());
                 }
                 config.emplace(key, info);
             }

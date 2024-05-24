@@ -2,9 +2,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <windows.h>
-#include <winuser.h>
-#include "./include/hook.hh"
-#include "./include/init.hh"
+#include "../include/hook.hh"
+#include "../include/init.hh"
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {

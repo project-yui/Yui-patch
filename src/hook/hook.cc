@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <string>
 #include <winnt.h>
-#include <winuser.h>
 #include <direct.h>
 #include <filesystem>
 #include "../include/redirect.hh"
@@ -54,13 +53,9 @@ HANDLE WINAPI Hk_CreateFileW(
     if (p.is_absolute())
     {
         // 绝对路径
-        // 获取当前目录
-        char * cwd = _getcwd(NULL, 0);
-        spdlog::info("cwd: {}", cwd);
-        // if (filename.find("\\\\?\\") == 0) {
-        //     filename.replace(0, 5, "");
-        // }
-        filename.replace(0, strlen(cwd) + 1, "");
+        if (filename.find("\\\\?\\") == 0) {
+            filename.replace(0, 4, "");
+        }
         spdlog::info("relative filename: {}", filename.c_str());
     }
 
