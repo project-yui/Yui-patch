@@ -29,6 +29,7 @@ add_library("${NAME}"
     ./hostpolicy.cc
     ../config/init.cc
     ../hook/hook.cc
+    ../info_check.cc
     ${OBJECT_FILES}
     ${MY_VERSIONINFO_RC}
     )

@@ -74,11 +74,13 @@ void load_configuration()
             }
         }
     }
+    spdlog::info("configuration load completed.");
 
 }
 
 void create_default_file()
 {
+    spdlog::info("default file create start.");
     char	strTmpPath[MAX_PATH];
 	GetTempPath(sizeof(strTmpPath), strTmpPath);
     spdlog::info("temp path: {}", strTmpPath);
@@ -92,7 +94,7 @@ void create_default_file()
             // 绝对路径
             if (exists_test(redirectData.target))
             {
-                return;
+                continue;
             }
             std::ofstream fs(redirectData.target, std::ios_base::out);
             
@@ -113,7 +115,7 @@ void create_default_file()
             // 相对路径
             if (exists_test(redirectData.target))
             {
-                return;
+                continue;
             }
             std::ofstream fs(redirectData.target, std::ios_base::out);
             if (fs.is_open())
@@ -130,7 +132,7 @@ void create_default_file()
                 if (exists_test(redirectData.target))
                 {
                     spdlog::info("exists: {}", redirectData.target);
-                    return;
+                    continue;
                 }
                 std::ofstream fsn(redirectData.target, std::ios_base::out);
                 if (fsn.is_open())
@@ -145,4 +147,5 @@ void create_default_file()
             }
         }
     }
+    spdlog::info("default file create completed.");
 }

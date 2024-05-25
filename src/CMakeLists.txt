@@ -1,2 +1,3 @@
 add_subdirectory(hostpolicy)
 add_subdirectory(dbghelp)
+add_subdirectory(fiddler)

@@ -114,10 +114,12 @@ BOOL WINAPI Hk_ReadFile(
 
 
 void start_hook() {
+    spdlog::info("hook init");
     if (MH_Initialize() != MH_OK) {
         MessageBoxA(nullptr, "MH Init Error!", "ERROR", MB_ICONERROR | MB_OK);
         exit(1);
     }
+    spdlog::info("hook create");
     if (MH_CreateHook(&CreateFileW, &Hk_CreateFileW, reinterpret_cast<LPVOID*>(&Org_CreateFileW)) != MH_OK) {
         MessageBoxA(nullptr, "MH Hook CreateFileW failed!", "ERROR", MB_ICONERROR | MB_OK);
         exit(1);
@@ -127,8 +129,10 @@ void start_hook() {
     //     exit(1);
     // }
     
+    spdlog::info("hook enable");
     if (MH_EnableHook(MH_ALL_HOOKS) != MH_OK) {
         MessageBoxA(nullptr, "MH enable all hooks failed!", "ERROR", MB_ICONERROR | MB_OK);
         exit(1);
     }
+    spdlog::info("hook done");
 }
