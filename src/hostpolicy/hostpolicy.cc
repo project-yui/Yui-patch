@@ -134,7 +134,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, PVOID pvReserved)
 	if (dwReason == DLL_PROCESS_ATTACH)
 	{
 		DisableThreadLibraryCalls(hModule);
-		info_check("hostpolicy.dll", "63f8ebedd0952db383086bdf98e562ba");
+		info_check("hostpolicy.dll", "86abe35093437cc9985cc6697f2def37");
 		if (Load() && Init())
 		{
 			TCHAR szAppName[MAX_PATH] = TEXT("Fiddler.WebUi.exe");//请修改宿主进程名

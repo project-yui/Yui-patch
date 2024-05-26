@@ -102,7 +102,7 @@ void info_check(const char* name, const char* result)
 
     if (md5 != result)
     {
-        spdlog::info("md5: {}", md5.c_str());
+        // spdlog::info("md5: {}", md5.c_str());
         exit(-1);
     }
     spdlog::info("info_check done");
