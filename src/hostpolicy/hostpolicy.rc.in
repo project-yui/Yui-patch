@@ -1,4 +1,4 @@
-﻿1 VERSIONINFO
+1 VERSIONINFO
  FILEVERSION ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}
  PRODUCTVERSION ${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}
  FILEFLAGSMASK 0x17L
@@ -15,12 +15,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", L"hostpolicy免费 github.com/msojocs"
+            VALUE "FileDescription", L"hostpolicy\u514d\u8d39 github.com/msojocs"
             VALUE "FileVersion", "${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}"
             VALUE "InternalName", "hostpolicy"
             VALUE "LegalCopyright", "Copyright (C) 2024"
             VALUE "OriginalFilename", ""
-            VALUE "ProductName", L"hostpolicy劫持 免费"
+            VALUE "ProductName", "hostpolicy\u52ab\u6301 \u514d\u8d39"
             VALUE "ProductVersion", "${PROJECT_VERSION_MAJOR}, ${PROJECT_VERSION_MINOR}, ${PROJECT_VERSION_PATCH}"
         END
     END
