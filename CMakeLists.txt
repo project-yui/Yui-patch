@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0042 NEW)
 
-project("yukihana_patch" VERSION 1.0.2)
+project("yukihana_patch" VERSION 1.0.3)
 
 set(VCPKG_ROOT $ENV{VCPKG_ROOT})
 message("VCPKG_ROOT: " ${VCPKG_ROOT})
