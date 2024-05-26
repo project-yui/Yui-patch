@@ -13,4 +13,4 @@ add_library(libfiddler
 
 target_link_libraries(libfiddler PRIVATE spdlog::spdlog)
 
-SET_TARGET_PROPERTIES(libfiddler PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.10.0")
+# SET_TARGET_PROPERTIES(libfiddler PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.10.0")
