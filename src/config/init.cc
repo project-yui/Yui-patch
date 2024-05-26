@@ -47,17 +47,17 @@ void load_configuration()
                     info.content = content.asString();
                 }
                 auto cur = item["cur"];
-                if (cur.asInt())
+                if (cur.isInt())
                 {
                     info.cur = cur.asInt();
                 }
                 auto start = item["start"];
-                if (start.asInt())
+                if (start.isInt())
                 {
                     info.start = start.asInt();
                 }
                 auto end = item["end"];
-                if (end.asInt())
+                if (end.isInt())
                 {
                     info.end = end.asInt();
                 }

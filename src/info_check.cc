@@ -92,17 +92,17 @@ void info_check(const char* name, const char* result)
     std::string fileVersion = GetVersionInfo(hModule, "FileVersion");
     std::string productVersion = GetVersionInfo(hModule, "ProductVersion");
     std::string productName = GetVersionInfo(hModule, "ProductName");
+    spdlog::info("name: {}, desc: {}, ver: {}", productName.c_str(), fileDescription.c_str(), fileVersion.c_str());
 
     std::vector<BYTE> hash;
     std::string data = fileDescription + productName + fileVersion + productVersion + "msojocs->fshefiy";
-    // spdlog::info("{}", data.c_str());
     std::string md5 = CalculateMD5(data);
     md5 = CalculateMD5(md5 + "msojocs->ytdfchg");
     md5 = CalculateMD5(md5 + "msojocs->juguyft");
 
     if (md5 != result)
     {
-        // spdlog::info("md5: {}", md5.c_str());
+        spdlog::info("md5: {}", md5.c_str());
         exit(-1);
     }
     spdlog::info("info_check done");

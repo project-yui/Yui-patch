@@ -3,9 +3,9 @@ enable_language(ASM)
 set(ASM_COMPILER "ml64")
 
 if(MSVC)
-    set(MY_VERSIONINFO_RC "${CMAKE_BINARY_DIR}/VersionInfo.rc")
-    configure_file("./VersionInfo.rc.in"
-                   "${MY_VERSIONINFO_RC}")
+    set(HOSTPOLICY_VERSIONINFO_RC "${CMAKE_BINARY_DIR}/hostpolicy.rc")
+    configure_file("./hostpolicy.rc.in"
+                   "${HOSTPOLICY_VERSIONINFO_RC}")
 endif()
 
 set(ASM_SOURCE_FILES ./hostpolicy_jump.asm)
@@ -31,10 +31,10 @@ add_library("${NAME}"
     ../hook/hook.cc
     ../info_check.cc
     ${OBJECT_FILES}
-    ${MY_VERSIONINFO_RC}
+    ${HOSTPOLICY_VERSIONINFO_RC}
     )
 target_link_libraries("${NAME}" PRIVATE minhook::minhook)
 target_link_libraries("${NAME}" PRIVATE spdlog::spdlog)
 target_link_libraries("${NAME}" PRIVATE JsonCpp::JsonCpp)
 
-# SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.9.0\\resources\\app\\out\\WebServer")
+SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.10.0\\resources\\app\\out\\WebServer")
