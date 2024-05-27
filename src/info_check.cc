@@ -44,47 +44,6 @@ std::wstring GetVersionInfo(HMODULE hModule, const std::wstring& infoType)
 }
 
 #define MD5LEN 33
-std::string CalculateMD5(const std::wstring& input) {
-    HCRYPTPROV hProv = 0;
-    HCRYPTHASH hHash = 0;
-    BYTE hash[MD5LEN];
-    DWORD hashLen = MD5LEN;
-    std::stringstream ss;
-
-    if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
-        spdlog::error("CryptAcquireContext failed: {}", GetLastError());
-        return "";
-    }
-
-    if (!CryptCreateHash(hProv, CALG_MD5, 0, 0, &hHash)) {
-        spdlog::error("CryptCreateHash failed: {}", GetLastError());
-        CryptReleaseContext(hProv, 0);
-        return "";
-    }
-
-    if (!CryptHashData(hHash, reinterpret_cast<const BYTE*>(input.c_str()), input.length(), 0)) {
-        spdlog::error("CryptHashData failed: ", GetLastError());
-        CryptDestroyHash(hHash);
-        CryptReleaseContext(hProv, 0);
-        return "";
-    }
-
-    if (!CryptGetHashParam(hHash, HP_HASHVAL, hash, &hashLen, 0)) {
-        spdlog::error("CryptGetHashParam failed: ", GetLastError());
-        CryptDestroyHash(hHash);
-        CryptReleaseContext(hProv, 0);
-        return "";
-    }
-
-    for (DWORD i = 0; i < hashLen; i++) {
-        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(hash[i]);
-    }
-
-    CryptDestroyHash(hHash);
-    CryptReleaseContext(hProv, 0);
-
-    return ss.str();
-}
 std::string CalculateMD5(const std::string& input) {
     HCRYPTPROV hProv = 0;
     HCRYPTHASH hHash = 0;
@@ -136,7 +95,7 @@ void info_check(const char* name, const char* result)
     std::wstring fileVersion = GetVersionInfo(hModule, L"FileVersion");
     std::wstring productVersion = GetVersionInfo(hModule, L"ProductVersion");
     std::wstring productName = GetVersionInfo(hModule, L"ProductName");
-    std::wstring t = L"name: " + productName + L", desc: " + fileDescription + L", ver: " + fileVersion;
+    std::wstring t = fileDescription + productName + fileVersion + productVersion;
     char *temp = (char *)malloc(sizeof(char) * t.length() * 2);
     memset(temp, 0, sizeof(char) * t.length() * 2);
     int ret = WideCharToMultiByte(65001, 0, t.c_str(), t.length(), temp, t.length() * 2, "\0", 0);
@@ -144,17 +103,17 @@ void info_check(const char* name, const char* result)
     {
         spdlog::info("length: {}, data: {}",t.length(), temp);
     }
-    free(temp);
 
     std::vector<BYTE> hash;
-    std::wstring data = fileDescription + productName + fileVersion + productVersion + L"msojocs->fshefiy";
+    std::string data = temp + std::string("msojocs->fshefiy");
+    free(temp);
     std::string md5 = CalculateMD5(data);
     md5 = CalculateMD5(md5 + "msojocs->ytdfchg");
     md5 = CalculateMD5(md5 + "msojocs->juguyft");
 
     if (md5 != result)
     {
-        // spdlog::info("md5: {}", md5.c_str());
+        spdlog::info("md5: {}", md5.c_str());
         exit(-1);
     }
     spdlog::info("info_check done");
