@@ -9,7 +9,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{
 		spdlog::info("libfiddler Dll main!");
-		info_check("libfiddler.dll", "aeb9377b0c499bbd3cbc827148b50948");
+		info_check("libfiddler.dll", "4120fc3f6693e5b8634fc5be004aac3b");
 	}
 	return TRUE;
 }
