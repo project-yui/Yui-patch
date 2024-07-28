@@ -88,6 +88,7 @@ std::string CalculateMD5(const std::string& input) {
 
 void info_check(const char* name, const char* result)
 {
+    return;
     spdlog::info("info_check");
     // 使用示例
     HMODULE hModule = GetModuleHandleA(name); // 替换为你的DLL名称
