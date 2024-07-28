@@ -65,7 +65,7 @@ void load_configuration()
                 if (p.is_relative())
                 {
                     char * cwd = _getcwd(NULL, 0);
-                    spdlog::info("reaolve relative path: {}, cwd: {}", key.c_str(), cwd);
+                    spdlog::info("resolve relative path: {}, cwd: {}", key.c_str(), cwd);
                     auto p1 = std::filesystem::canonical(key);
                     key = p1.string();
                     spdlog::info("absolute path: {}", key.c_str());

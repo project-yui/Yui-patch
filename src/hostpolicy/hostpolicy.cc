@@ -158,6 +158,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, PVOID pvReserved)
 			create_default_file();
 			start_hook();
 		}
+		else {
+			spdlog::error("load failed...");
+		}
 	}
 	else if (dwReason == DLL_PROCESS_DETACH)
 	{
