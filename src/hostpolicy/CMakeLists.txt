@@ -38,7 +38,5 @@ target_link_libraries("${NAME}" PRIVATE spdlog::spdlog)
 target_link_libraries("${NAME}" PRIVATE JsonCpp::JsonCpp)
 
 
-set_target_properties(libfiddler PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-if(UNIX)
-    set_target_properties(libfiddler PROPERTIES PREFIX "" SUFFIX ".so")
-endif()
+set_target_properties("${NAME}" PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+

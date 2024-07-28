@@ -1,7 +1,7 @@
 #include "../include/init.hh"
 #include <cstring>
 
-#ifdef __WIN__
+#ifdef WIN32
 #include <Windows.h>
 #include <direct.h>
 #elif defined(__linux__)
@@ -21,7 +21,7 @@ std::map<std::string, RedirectInfo> config;
 #endif
 
 inline bool exists_test (const std::string& name) {
-#ifdef __WIN__
+#ifdef WIN32
   struct stat buffer;   
   return (stat (name.c_str(), &buffer) == 0); 
 #elif defined(__linux__)
@@ -82,7 +82,7 @@ void load_configuration()
                 std::filesystem::path p(key);
                 if (p.is_relative())
                 {
-                    #ifdef __WIN__
+                    #ifdef WIN32
                     char * cwd = _getcwd(NULL, 0);
                     #elif defined(__linux__)
                     char * cwd = getcwd(NULL, 0);
@@ -106,7 +106,7 @@ void create_default_file()
 {
     spdlog::info("default file create start.");
     char	strTmpPath[MAX_PATH];
-    #ifdef __WIN__
+    #ifdef WIN32
 	GetTempPath(sizeof(strTmpPath), strTmpPath);
     #elif defined(__linux__)
     std::filesystem::path temp_dir = std::filesystem::temp_directory_path();

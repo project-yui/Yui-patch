@@ -1,12 +1,12 @@
 
 #include <spdlog/spdlog.h>
-#ifdef __WIN__
+#ifdef WIN32
 #include <windows.h>
 #include <winnt.h>
 #include "../include/info_check.hh"
 #endif
 
-#ifdef __WIN__
+#ifdef WIN32
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
