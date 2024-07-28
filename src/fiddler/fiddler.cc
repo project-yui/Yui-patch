@@ -1,9 +1,12 @@
 
 #include <spdlog/spdlog.h>
+#ifdef __WIN__
 #include <windows.h>
 #include <winnt.h>
 #include "../include/info_check.hh"
+#endif
 
+#ifdef __WIN__
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
@@ -18,3 +21,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 extern "C" __declspec(dllexport) void f() {
 	
 }
+#endif
+
+#ifdef __linux__
+void f() {
+	
+}
+#endif

@@ -37,4 +37,8 @@ target_link_libraries("${NAME}" PRIVATE minhook::minhook)
 target_link_libraries("${NAME}" PRIVATE spdlog::spdlog)
 target_link_libraries("${NAME}" PRIVATE JsonCpp::JsonCpp)
 
-# SET_TARGET_PROPERTIES("${NAME}" PROPERTIES RUNTIME_OUTPUT_DIRECTORY "D:\\Software\\Fiddler Everywhere 5.10.0\\resources\\app\\out\\WebServer")
+
+set_target_properties(libfiddler PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+if(UNIX)
+    set_target_properties(libfiddler PROPERTIES PREFIX "" SUFFIX ".so")
+endif()

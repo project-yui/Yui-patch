@@ -1,6 +1,9 @@
 {
   "dependencies": [
-    "minhook",
+    {
+      "name": "minhook",
+      "platform": "windows"
+    },
     "spdlog",
     "jsoncpp"
   ]
