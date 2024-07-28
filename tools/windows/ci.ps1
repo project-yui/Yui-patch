@@ -8,7 +8,7 @@ try
     cmake --build "$root_dir/build" --config Release --target all --
     mkdir "$root_dir/tmp/build"
     Write-Host "$root_dir/build"
-    Get-ChildItem -Path "$root_dir/build/src" -Filter "*.dll" -Recurse | ForEach-Object {
+    Get-ChildItem -Path "$root_dir/build/" -Filter "*.dll" -Recurse | ForEach-Object {
         try{
             # 对每个文件执行操作，例如输出文件名
             $Name = $_.BaseName

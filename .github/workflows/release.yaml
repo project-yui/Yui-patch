@@ -9,7 +9,7 @@ on:
   push:
     tags:        
       - v*
-    branches: [ master, dev, ci]
+    branches: [ master, dev, ci, linux]
   pull_request:
     branches: [ master ]
   # # Allows you to run this workflow manually from the Actions tab
@@ -60,10 +60,53 @@ jobs:
           name: telecord-${{ matrix.arch }}.build
           path: tmp/build
 
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        arch: ['x86_64']
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Generate TAG
+        id: Tag
+        run: |
+          tag='continuous'
+          name='Continuous Build'
+          if [ 'true' == ${{ startsWith(github.ref, 'refs/tags/') }} ];then
+            tag='${{ github.ref_name }}'
+            name='${{ github.ref_name }}'
+          fi
+          echo "tag result: $tag - $name"
+          echo "::set-output name=tag::$tag"
+          echo "::set-output name=name::$name"
+         
+      - name: run-vcpkg
+        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
+
+      - name: Build
+        run: |
+          sudo apt install -y ninja-build
+          tools/linux/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          # Artifact name
+          name: telecord-${{ matrix.arch }}.build
+          path: tmp/build
+
   upload:
     name: Create release and upload artifacts
     needs:
       - build-windows
+      - build-linux
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -93,7 +136,8 @@ jobs:
           wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
           chmod +x pyuploadtool-x86_64.AppImage
           ./pyuploadtool-x86_64.AppImage \
-          **build/*.dll
+          **build/*.dll \
+          **build/*.so
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -105,3 +149,4 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           files: |
             **build/*.dll
+            **build/*.so

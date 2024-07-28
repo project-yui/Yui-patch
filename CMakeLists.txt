@@ -25,7 +25,9 @@ include("${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 
 message("LD_LIBRARY_PATH:" ${LD_LIBRARY_PATH})
 
-find_package(minhook CONFIG REQUIRED)
+if(MSVC)
+    find_package(minhook CONFIG REQUIRED)
+endif()
 find_package(spdlog CONFIG REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
 
