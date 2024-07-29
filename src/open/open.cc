@@ -9,6 +9,8 @@
 // mac: https://stackoverflow.com/questions/34114587/dyld-library-path-dyld-insert-libraries-not-working
 
 #if __APPLE__
+#define _GUN_SOURCE
+#include <fcntl.h>
 #define DYLD_INTERPOSE(_replacment,_replacee) \
 __attribute__((used)) static struct{ const void* replacment; const void* replacee; } _interpose_##_replacee \
 __attribute__ ((section ("__DATA,__interpose"))) = { (const void*)(unsigned long)&_replacment, (const void*)(unsigned long)&_replacee };
