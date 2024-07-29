@@ -16,43 +16,43 @@ typedef FILE *(*old_fdopen)(int fd, const char *mode);
 typedef FILE *(*old_freopen)(const char *pathname, const char *mode, FILE *stream);
 
 // typedef int (*CAC_FUNC)(int, int);
-// extern "C" int open(const char *file, int flags, mode_t mode) {
-//   printf("open hook\n");
-//   old_open oopen = (old_open)dlsym(RTLD_NEXT, "open");
-//   std::string filename(file);
-//   spdlog::info("full filename: {}", filename.c_str());
+extern "C" int open(const char *file, int flags, mode_t mode) {
+  printf("open hook\n");
+  old_open oopen = (old_open)dlsym(RTLD_NEXT, "open");
+  std::string filename(file);
+  spdlog::info("full filename: {}", filename.c_str());
 
-//   std::filesystem::path p(filename);
+  std::filesystem::path p(filename);
 
-//   if (p.is_absolute()) {
-//     // 绝对路径
-//     spdlog::info("relative filename: {}", filename.c_str());
-//   }
+  if (p.is_absolute()) {
+    // 绝对路径
+    spdlog::info("relative filename: {}", filename.c_str());
+  }
 
-//   if (config.find(filename.c_str()) != config.end()) {
-//     spdlog::info("File config was found: {}", filename);
-//     auto directData = config[filename.c_str()];
-//     if (directData.cur >= directData.start && directData.cur < directData.end) {
-//       spdlog::info("Redirect for: {}", filename);
-//       directData.cur++;
-//       // 文件名
+  if (config.find(filename.c_str()) != config.end()) {
+    spdlog::info("File config was found: {}", filename);
+    auto directData = config[filename.c_str()];
+    if (directData.cur >= directData.start && directData.cur < directData.end) {
+      spdlog::info("Redirect for: {}", filename);
+      directData.cur++;
+      // 文件名
 
-//       const char *strTmpPath = directData.target.c_str();
-//       spdlog::info("Redirect to: {}", strTmpPath);
+      const char *strTmpPath = directData.target.c_str();
+      spdlog::info("Redirect to: {}", strTmpPath);
 
-//       return oopen(strTmpPath, flags, mode);
+      return oopen(strTmpPath, flags, mode);
 
-//     } else {
-//       spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target,
-//                    directData.cur, directData.start, directData.end);
-//     }
+    } else {
+      spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target,
+                   directData.cur, directData.start, directData.end);
+    }
 
-//   } else {
-//     spdlog::info("Can not find file config: {}", filename.c_str());
-//   }
+  } else {
+    spdlog::info("Can not find file config: {}", filename.c_str());
+  }
 
-//   return oopen(file, flags, mode);
-// }
+  return oopen(file, flags, mode);
+}
 // extern "C" FILE* fopen(const char* file, const char* mode) {
 //   printf("fopen hook\n");
 //   old_fopen oopen = (old_fopen)dlsym(RTLD_NEXT, "fopen");
