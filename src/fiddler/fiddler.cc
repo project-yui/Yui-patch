@@ -23,7 +23,7 @@ extern "C" __declspec(dllexport) void f() {
 }
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || __APPLE__
 void f() {
 	
 }
