@@ -16,7 +16,7 @@ target_link_libraries(libfiddler PRIVATE spdlog::spdlog)
 
 set_target_properties(libfiddler PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 if(APPLE)
-    set_target_properties(libfiddler PROPERTIES PREFIX "lib" SUFFIX ".dylib")
+    set_target_properties(libfiddler PROPERTIES PREFIX "" SUFFIX ".dylib")
 elseif(UNIX)
     set_target_properties(libfiddler PROPERTIES PREFIX "" SUFFIX ".so")
 endif()

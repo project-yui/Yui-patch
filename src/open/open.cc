@@ -32,7 +32,9 @@ extern "C" int open(const char *file, int flags, mode_t mode) {
 int pOpen(const char *file, int flags, mode_t mode) {
 #endif
   printf("open hook\n");
+  #ifdef __linux__
   old_open oopen = (old_open)dlsym(RTLD_NEXT, "open");
+  #endif
   std::string filename(file);
   spdlog::info("full filename: {}", filename.c_str());
 
@@ -54,7 +56,11 @@ int pOpen(const char *file, int flags, mode_t mode) {
       const char *strTmpPath = directData.target.c_str();
       spdlog::info("Redirect to: {}", strTmpPath);
 
+      #ifdef __linux__
       return oopen(strTmpPath, flags, mode);
+      #elif __APPLE__
+      return open(strTmpPath, flags, mode);
+      #endif
 
     } else {
       spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target,
@@ -65,7 +71,11 @@ int pOpen(const char *file, int flags, mode_t mode) {
     spdlog::info("Can not find file config: {}", filename.c_str());
   }
 
+  #ifdef __linux__
   return oopen(file, flags, mode);
+  #elif __APPLE__
+  return open(file, flags, mode);
+  #endif
 }
 #if __APPLE__
 DYLD_INTERPOSE(pOpen, open);
