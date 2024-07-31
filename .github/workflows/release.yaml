@@ -223,7 +223,8 @@ jobs:
           chmod +x pyuploadtool-x86_64.AppImage
           ./pyuploadtool-x86_64.AppImage \
           **build/*.dll \
-          **build/*.so
+          **build/*.so \
+          **build/*.dylib
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -236,3 +237,4 @@ jobs:
           files: |
             **build/*.dll
             **build/*.so
+            **build/*.dylib
