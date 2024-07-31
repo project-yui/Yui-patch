@@ -6,6 +6,16 @@
 // #include <string>
 // #include <sys/types.h>
 
+// mac: https://stackoverflow.com/questions/34114587/dyld-library-path-dyld-insert-libraries-not-working
+
+#if __APPLE__
+#define _GUN_SOURCE
+#include <fcntl.h>
+#define DYLD_INTERPOSE(_replacment,_replacee) \
+__attribute__((used)) static struct{ const void* replacment; const void* replacee; } _interpose_##_replacee \
+__attribute__ ((section ("__DATA,__interpose"))) = { (const void*)(unsigned long)&_replacment, (const void*)(unsigned long)&_replacee };
+#endif
+
 using std::string;
 
 typedef int (*old_open)(const char *p, int flags, mode_t mode);
@@ -16,43 +26,60 @@ typedef FILE *(*old_fdopen)(int fd, const char *mode);
 typedef FILE *(*old_freopen)(const char *pathname, const char *mode, FILE *stream);
 
 // typedef int (*CAC_FUNC)(int, int);
-// extern "C" int open(const char *file, int flags, mode_t mode) {
-//   printf("open hook\n");
-//   old_open oopen = (old_open)dlsym(RTLD_NEXT, "open");
-//   std::string filename(file);
-//   spdlog::info("full filename: {}", filename.c_str());
+#ifdef __linux__
+extern "C" int open(const char *file, int flags, mode_t mode) {
+#elif __APPLE__
+int pOpen(const char *file, int flags, mode_t mode) {
+#endif
+  printf("open hook\n");
+  #ifdef __linux__
+  old_open oopen = (old_open)dlsym(RTLD_NEXT, "open");
+  #endif
+  std::string filename(file);
+  spdlog::info("full filename: {}", filename.c_str());
 
-//   std::filesystem::path p(filename);
+  std::filesystem::path p(filename);
 
-//   if (p.is_absolute()) {
-//     // 绝对路径
-//     spdlog::info("relative filename: {}", filename.c_str());
-//   }
+  if (p.is_absolute()) {
+    // 绝对路径
+    spdlog::info("relative filename: {}", filename.c_str());
+  }
 
-//   if (config.find(filename.c_str()) != config.end()) {
-//     spdlog::info("File config was found: {}", filename);
-//     auto directData = config[filename.c_str()];
-//     if (directData.cur >= directData.start && directData.cur < directData.end) {
-//       spdlog::info("Redirect for: {}", filename);
-//       directData.cur++;
-//       // 文件名
+  if (config.find(filename.c_str()) != config.end()) {
+    spdlog::info("File config was found: {}", filename);
+    auto directData = config[filename.c_str()];
+    if (directData.cur >= directData.start && directData.cur < directData.end) {
+      spdlog::info("Redirect for: {}", filename);
+      directData.cur++;
+      // 文件名
 
-//       const char *strTmpPath = directData.target.c_str();
-//       spdlog::info("Redirect to: {}", strTmpPath);
+      const char *strTmpPath = directData.target.c_str();
+      spdlog::info("Redirect to: {}", strTmpPath);
 
-//       return oopen(strTmpPath, flags, mode);
+      #ifdef __linux__
+      return oopen(strTmpPath, flags, mode);
+      #elif __APPLE__
+      return open(strTmpPath, flags, mode);
+      #endif
 
-//     } else {
-//       spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target,
-//                    directData.cur, directData.start, directData.end);
-//     }
+    } else {
+      spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target,
+                   directData.cur, directData.start, directData.end);
+    }
 
-//   } else {
-//     spdlog::info("Can not find file config: {}", filename.c_str());
-//   }
+  } else {
+    spdlog::info("Can not find file config: {}", filename.c_str());
+  }
 
-//   return oopen(file, flags, mode);
-// }
+  #ifdef __linux__
+  return oopen(file, flags, mode);
+  #elif __APPLE__
+  return open(file, flags, mode);
+  #endif
+}
+#if __APPLE__
+DYLD_INTERPOSE(pOpen, open);
+#endif
 // extern "C" FILE* fopen(const char* file, const char* mode) {
 //   printf("fopen hook\n");
 //   old_fopen oopen = (old_fopen)dlsym(RTLD_NEXT, "fopen");

@@ -4,7 +4,7 @@
 #ifdef WIN32
 #include <Windows.h>
 #include <direct.h>
-#elif defined(__linux__)
+#elif defined(__linux__) || __APPLE__
 #include <sys/stat.h>
 #include <unistd.h>
 #define MAX_PATH 255
@@ -16,7 +16,7 @@
 #include <spdlog/spdlog.h>
 #include <json/json.h>
 
-#if defined(__linux__)
+#if defined(__linux__) || __APPLE__
 std::map<std::string, RedirectInfo> config;
 #endif
 
@@ -24,7 +24,7 @@ inline bool exists_test (const std::string& name) {
 #ifdef WIN32
   struct stat buffer;   
   return (stat (name.c_str(), &buffer) == 0); 
-#elif defined(__linux__)
+#elif defined(__linux__) || __APPLE__
   return !access(name.c_str(), F_OK);
 #endif
 }
@@ -84,7 +84,7 @@ void load_configuration()
                 {
                     #ifdef WIN32
                     char * cwd = _getcwd(NULL, 0);
-                    #elif defined(__linux__)
+                    #elif defined(__linux__) || __APPLE__
                     char * cwd = getcwd(NULL, 0);
                     #endif
                     spdlog::info("resolve relative path: {}, cwd: {}", key.c_str(), cwd);

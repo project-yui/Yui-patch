@@ -3,7 +3,9 @@ cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0042 NEW)
 
 project("yukihana_patch" VERSION 1.0.4)
-
+if(APPLE)
+    set(CMAKE_OSX_ARCHITECTURES x86_64)
+endif()
 set(VCPKG_ROOT $ENV{VCPKG_ROOT})
 message("VCPKG_ROOT: " ${VCPKG_ROOT})
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
