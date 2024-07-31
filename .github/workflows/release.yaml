@@ -103,7 +103,7 @@ jobs:
           path: tmp/build
 
   build-mac-x86:
-    name: Build Linux
+    name: Build MAC
     runs-on: macos-13
 
     strategy:
@@ -145,7 +145,7 @@ jobs:
           path: tmp/build
 
   build-mac-arm64:
-    name: Build Linux
+    name: Build MAC
     runs-on: macos-13-xlarge
 
     strategy:
@@ -191,6 +191,8 @@ jobs:
     needs:
       - build-windows
       - build-linux
+      - build-mac-x86
+      - build-mac-arm64
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
