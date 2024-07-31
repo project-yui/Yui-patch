@@ -146,7 +146,7 @@ jobs:
 
   build-mac-arm64:
     name: Build MAC
-    runs-on: macos-13-xlarge
+    runs-on: macos-latest
 
     strategy:
       matrix:
