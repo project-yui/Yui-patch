@@ -65,12 +65,12 @@ HANDLE WINAPI Hk_CreateFileW(
         auto directData = config[filename.c_str()];
         if (directData.cur >= directData.start && directData.cur < directData.end)
         {
-            spdlog::info("Redirect for: {}", filename);
+            spdlog::info("{} Redirect for: {}", directData.cur, filename);
             directData.cur++;
             // 文件名
 
             const char	*strTmpPath = directData.target.c_str();
-            spdlog::info("Redirect to: {}", strTmpPath);
+            spdlog::info("{} Redirect to: {}", directData.cur, strTmpPath);
 
             int cap = (strlen(strTmpPath) + 1) * sizeof(wchar_t);
             wchar_t *defaultIndex = (wchar_t *)malloc(cap);
@@ -78,6 +78,7 @@ HANDLE WINAPI Hk_CreateFileW(
             
             errno_t err = mbstowcs_s(&retlen, defaultIndex, cap / sizeof(wchar_t), strTmpPath, _TRUNCATE);
 
+            config[filename.c_str()] = directData;
             if (err == 0) {
                 HANDLE ret = Org_CreateFileW(defaultIndex, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
                 free(defaultIndex);
