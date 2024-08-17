@@ -56,7 +56,11 @@ HANDLE WINAPI Hk_CreateFileW(
         if (filename.find("\\\\?\\") == 0) {
             filename.replace(0, 4, "");
         }
-        spdlog::info("relative filename: {}", filename.c_str());
+        if ('a' <= filename[0] && filename[0] <= 'z')
+        {
+            filename[0] = 'A' + filename[0] - 'a';
+        }
+        spdlog::info("Absolute path: {}", filename.c_str());
     }
 
     if (config.find(filename.c_str()) != config.end())
