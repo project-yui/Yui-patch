@@ -15,19 +15,3 @@ jobs:
   trigger-x86_64:
     uses: ./.github/workflows/build-mac-x86_64.yml
     secrets: inherit
-
-  upload-artifacts:
-    runs-on: macos-latest
-    needs:
-      - trigger-arm64
-      - trigger-x86_64
-    steps:
-      - name: Download artifacts from mac-arm64
-        uses: actions/download-artifact@v4
-        with:
-          name: mac-arm64-artifact
-
-      - name: Download artifacts from mac-x86_64
-        uses: actions/download-artifact@v4
-        with:
-          name: mac-x86_64-artifact
