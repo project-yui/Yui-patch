@@ -57,12 +57,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-win
+          name: ${{ matrix.arch }}.build-win
           path: tmp/build
 
   build-linux:
     name: Build Linux
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -99,12 +99,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-linux
+          name: ${{ matrix.arch }}.build-linux
           path: tmp/build
 
   build-mac-x86:
-    name: Build MAC
-    runs-on: macos-13
+    name: Build MAC x86_64
+    runs-on: macos-latest
 
     strategy:
       matrix:
@@ -141,11 +141,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-mac
+          name: ${{ matrix.arch }}.build-mac
           path: tmp/build
 
   build-mac-arm64:
-    name: Build MAC
+    name: Build MAC arm64
     runs-on: macos-latest
 
     strategy:
@@ -183,7 +183,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-mac
+          name: ${{ matrix.arch }}.build-mac
           path: tmp/build
 
   upload:
