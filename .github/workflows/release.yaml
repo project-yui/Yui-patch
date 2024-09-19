@@ -1,11 +1,19 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build & Release (Original)
+name: Build Packages
 
 on:
   release:
     types: [published]
+  push:
+    tags:        
+      - v*
+    branches: [ master, dev, ci, mac]
+  pull_request:
+    branches: [ master ]
+  # # Allows you to run this workflow manually from the Actions tab
+  # workflow_dispatch:
 
 jobs:
   build-windows:
@@ -18,7 +26,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -49,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: ${{ matrix.arch }}.build-win
+          name: yukihana-${{ matrix.arch }}.build-win
           path: tmp/build
 
   build-linux:
@@ -62,7 +70,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -91,11 +99,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: ${{ matrix.arch }}.build-linux
+          name: yukihana-${{ matrix.arch }}.build-linux
           path: tmp/build
 
   build-mac-x86:
-    name: Build MAC x86_64
+    name: Build Mac
     runs-on: macos-latest
 
     strategy:
@@ -104,7 +112,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -133,11 +141,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: ${{ matrix.arch }}.build-mac
+          name: yukihana-${{ matrix.arch }}.build-mac
           path: tmp/build
 
   build-mac-arm64:
-    name: Build MAC arm64
+    name: Build MAC
     runs-on: macos-latest
 
     strategy:
@@ -146,7 +154,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -175,7 +183,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: ${{ matrix.arch }}.build-mac
+          name: yukihana-${{ matrix.arch }}.build-mac
           path: tmp/build
 
   upload:
