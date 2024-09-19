@@ -37,7 +37,7 @@ jobs:
           name: mac-x86_64-artifact
 
       - name: Upload artifacts (if not triggered by build-3-os)
-        if: ${{ github.event_name != 'workflow_run' }}
+        if: ${{ github.event_name != 'build-3-os' }}
         uses: actions/upload-artifact@v4
         with:
           name: mac-all-artifact
