@@ -49,7 +49,7 @@ jobs:
           powershell tools/windows/ci.ps1 ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
       - name: Upload artifacts (if not triggered by build-3-os)
-        if: ${{ github.event_name != 'workflow_run' }}
+        if: ${{ github.event_name != 'build-3-os' }}
         uses: actions/upload-artifact@v4
         with:
           name: win-artifact
