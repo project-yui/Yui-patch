@@ -40,5 +40,5 @@ jobs:
         if: ${{ github.event_name != 'workflow_run' }}
         uses: actions/upload-artifact@v4
         with:
-          name: build-mac-all
+          name: mac-all-artifact
           path: tmp/build
