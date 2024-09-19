@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-mac-arm64:
-    name: Build MAC arm64
+    name: Build Mac
     runs-on: macos-latest
 
     strategy:
