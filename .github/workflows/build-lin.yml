@@ -6,10 +6,6 @@ name: Build Linux
 on:
   workflow_dispatch:
   workflow_call:
-  workflow_run:
-    workflows: ["build-3-os"]
-    types:
-      - requested
 
 jobs:
   build-linux:
