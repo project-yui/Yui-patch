@@ -5,6 +5,10 @@ name: Build MacOS arm64 (Only)
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["build-mac-all"]
+    types:
+      - requested
 
 jobs:
   build-mac-arm64:
