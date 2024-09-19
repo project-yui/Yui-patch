@@ -5,173 +5,50 @@ name: Build Packages for All 3 OS
 
 on:
   workflow_dispatch:
+  workflow_call:
+  workflow_run:
+    workflows: ["release"]
+    types:
+      - requested
 
 jobs:
-  build-windows:
-    name: Build Windows
-    runs-on: windows-latest
+  trigger-mac:
+    uses: ./.github/workflows/build-mac-all.yml
+    secrets: inherit
 
-    strategy:
-      matrix:
-        arch: ['x86_64']
+  trigger-win:
+    uses: ./.github/workflows/build-win.yml
+    secrets: inherit
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
+  trigger-lin:
+    uses: ./.github/workflows/build-lin.yml
+    secrets: inherit
 
-      - name: Generate TAG
-        id: Tag
-        run: |
-          $tag="continuous"
-          $name="Continuous Build"
-          if ( "true" -eq "${{ startsWith(github.ref, 'refs/tags/') }}" ) {
-            $tag="${{ github.ref_name }}"
-            $name='${{ github.ref_name }}'
-          }
-          echo "tag result: $tag - $name"
-          echo "::set-output name=tag::$tag"
-          echo "::set-output name=name::$name"
-         
-      - name: run-vcpkg
-        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
-
-      - uses: TheMrMilchmann/setup-msvc-dev@v3
-        with:
-          arch: ${{ matrix.arch }}
-      - name: Build
-        run: |
-          powershell tools/windows/ci.ps1 ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          # Artifact name
-          name: ${{ matrix.arch }}.build-win
-          path: tmp/build
-
-  build-linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        arch: ['x86_64']
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-
-      - name: Generate TAG
-        id: Tag
-        run: |
-          tag='continuous'
-          name='Continuous Build'
-          if [ 'true' == ${{ startsWith(github.ref, 'refs/tags/') }} ];then
-            tag='${{ github.ref_name }}'
-            name='${{ github.ref_name }}'
-          fi
-          echo "tag result: $tag - $name"
-          echo "::set-output name=tag::$tag"
-          echo "::set-output name=name::$name"
-         
-      - name: run-vcpkg
-        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
-
-      - name: Build
-        run: |
-          sudo apt install -y ninja-build
-          tools/linux/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          # Artifact name
-          name: ${{ matrix.arch }}.build-linux
-          path: tmp/build
-
-  build-mac-x86:
-    name: Build MAC x86_64
+  upload-artifacts:
     runs-on: macos-latest
-
-    strategy:
-      matrix:
-        arch: ['x86_64']
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    needs:
+      - trigger-mac
+      - trigger-win
+      - trigger-lin
     steps:
-      - uses: actions/checkout@v2
+      - name: Download macOS Artifacts
+        uses: actions/download-artifact@v4
         with:
-          submodules: 'recursive'
+          name: build-mac-all
 
-      - name: Generate TAG
-        id: Tag
-        run: |
-          tag='continuous'
-          name='Continuous Build'
-          if [ 'true' == ${{ startsWith(github.ref, 'refs/tags/') }} ];then
-            tag='${{ github.ref_name }}'
-            name='${{ github.ref_name }}'
-          fi
-          echo "tag result: $tag - $name"
-          echo "::set-output name=tag::$tag"
-          echo "::set-output name=name::$name"
-         
-      - name: run-vcpkg
-        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
+      - name: Download Linux Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-lin
 
-      - name: Build
-        run: |
-          brew install ninja
-          tools/mac/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-win
 
-      - name: Upload artifact
+      - name: Upload artifacts (if not triggered by release)
+        if: ${{ github.event_name != 'workflow_run' }}
         uses: actions/upload-artifact@v4
         with:
-          # Artifact name
-          name: ${{ matrix.arch }}.build-mac
-          path: tmp/build
-
-  build-mac-arm64:
-    name: Build MAC arm64
-    runs-on: macos-latest
-
-    strategy:
-      matrix:
-        arch: ['arm64']
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-
-      - name: Generate TAG
-        id: Tag
-        run: |
-          tag='continuous'
-          name='Continuous Build'
-          if [ 'true' == ${{ startsWith(github.ref, 'refs/tags/') }} ];then
-            tag='${{ github.ref_name }}'
-            name='${{ github.ref_name }}'
-          fi
-          echo "tag result: $tag - $name"
-          echo "::set-output name=tag::$tag"
-          echo "::set-output name=name::$name"
-         
-      - name: run-vcpkg
-        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
-
-      - name: Build
-        run: |
-          brew install ninja
-          tools/mac/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          # Artifact name
-          name: ${{ matrix.arch }}.build-mac
+          name: build-3-os
           path: tmp/build
