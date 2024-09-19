@@ -50,5 +50,5 @@ jobs:
         if: ${{ github.event_name != 'workflow_run' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.arch }}.build-mac
+          name: mac-arm64-artifact
           path: tmp/build
