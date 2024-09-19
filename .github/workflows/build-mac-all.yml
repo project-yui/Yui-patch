@@ -1,0 +1,38 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Build MacOS All (x86_64 & arm64)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger-arm64:
+    uses: ./.github/workflows/build-mac-arm64.yml
+    secrets: inherit
+
+  trigger-x86_64:
+    uses: ./.github/workflows/build-mac-x86_64.yml
+    secrets: inherit
+
+  upload-artifacts:
+    runs-on: macos-latest
+    needs:
+      - trigger-arm64
+      - trigger-x86_64
+    steps:
+      - name: Download artifacts from mac-arm64
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-arm64-artifact
+
+      - name: Download artifacts from mac-x86_64
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-x86_64-artifact
+
+      - name: Upload combined artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-mac-all
+          path: tmp/build
