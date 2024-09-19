@@ -5,6 +5,7 @@ name: Build MacOS x86_64 (Only)
 
 on:
   workflow_dispatch:
+  workflow_call:
   workflow_run:
     workflows: ["build-mac-all"]
     types:
@@ -22,7 +23,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
