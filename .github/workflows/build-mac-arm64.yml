@@ -6,10 +6,6 @@ name: Build MacOS arm64 (Only)
 on:
   workflow_dispatch:
   workflow_call:
-  workflow_run:
-    workflows: ["build-mac-all"]
-    types:
-      - requested
 
 jobs:
   build-mac-arm64:
@@ -47,8 +43,7 @@ jobs:
           brew install ninja
           tools/mac/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
-      - name: Upload artifacts (if not triggered by build-mac-all)
-        if: ${{ github.event_name != 'build-mac-all' }}
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mac-arm64-artifact
