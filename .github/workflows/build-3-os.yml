@@ -6,10 +6,6 @@ name: Build Packages for All 3 OS
 on:
   workflow_dispatch:
   workflow_call:
-  workflow_run:
-    workflows: ["release"]
-    types:
-      - requested
 
 jobs:
   trigger-mac:
