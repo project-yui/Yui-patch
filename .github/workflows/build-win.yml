@@ -5,6 +5,11 @@ name: Build Windows
 
 on:
   workflow_dispatch:
+  workflow_call:
+  workflow_run:
+    workflows: ["build-3-os"]
+    types:
+      - requested
 
 jobs:
   build-windows:
@@ -16,7 +21,7 @@ jobs:
         arch: ['x86_64']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -43,9 +48,9 @@ jobs:
         run: |
           powershell tools/windows/ci.ps1 ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
-      - name: Upload artifact
+      - name: Upload artifacts (if not triggered by build-3-os)
+        if: ${{ github.event_name != 'workflow_run' }}
         uses: actions/upload-artifact@v4
         with:
-          # Artifact name
-          name: ${{ matrix.arch }}.build-win
+          name: build-win
           path: tmp/build
