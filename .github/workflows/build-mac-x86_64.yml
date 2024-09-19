@@ -6,15 +6,11 @@ name: Build MacOS x86_64 (Only)
 on:
   workflow_dispatch:
   workflow_call:
-  workflow_run:
-    workflows: ["build-mac-all"]
-    types:
-      - requested
 
 jobs:
 
   build-mac-x86:
-    name: Build MAC x86_64
+    name: Build Mac
     runs-on: macos-latest
 
     strategy:
