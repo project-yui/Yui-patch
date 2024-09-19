@@ -19,32 +19,3 @@ jobs:
   trigger-lin:
     uses: ./.github/workflows/build-lin.yml
     secrets: inherit
-
-  upload-artifacts:
-    runs-on: macos-latest
-    needs:
-      - trigger-mac
-      - trigger-win
-      - trigger-lin
-    steps:
-      - name: Download macOS Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: mac-all-artifact
-
-      - name: Download Linux Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: lin-artifact
-
-      - name: Download Windows Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: win-artifact
-
-      - name: Upload artifacts (if not triggered by release)
-        if: ${{ github.event_name != 'workflow_run' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-3-os
-          path: tmp/build
