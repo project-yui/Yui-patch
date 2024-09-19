@@ -34,17 +34,17 @@ jobs:
       - name: Download macOS Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-mac-all
+          name: mac-all-artifact
 
       - name: Download Linux Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-lin
+          name: lin-artifact
 
       - name: Download Windows Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-win
+          name: win-artifact
 
       - name: Upload artifacts (if not triggered by release)
         if: ${{ github.event_name != 'workflow_run' }}
