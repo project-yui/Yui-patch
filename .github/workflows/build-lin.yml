@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   workflow_call:
   workflow_run:
-    workflows: ["build-mac-all"]
+    workflows: ["build-3-os"]
     types:
       - requested
 
