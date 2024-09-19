@@ -54,10 +54,10 @@ jobs:
           powershell tools/windows/ci.ps1 ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build
+          name: yukihana-${{ matrix.arch }}.build-win
           path: tmp/build
 
   build-linux:
@@ -96,10 +96,10 @@ jobs:
           tools/linux/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build
+          name: yukihana-${{ matrix.arch }}.build-linux
           path: tmp/build
 
   build-mac-x86:
@@ -138,10 +138,10 @@ jobs:
           tools/mac/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build
+          name: yukihana-${{ matrix.arch }}.build-mac
           path: tmp/build
 
   build-mac-arm64:
@@ -180,10 +180,10 @@ jobs:
           tools/mac/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build
+          name: yukihana-${{ matrix.arch }}.build-mac
           path: tmp/build
 
   upload:
@@ -196,7 +196,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.8
       - name: Inspect directory after downloading artifacts
         run: ls -alFR
 
@@ -222,9 +222,9 @@ jobs:
           wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
           chmod +x pyuploadtool-x86_64.AppImage
           ./pyuploadtool-x86_64.AppImage \
-          **build/*.dll \
-          **build/*.so \
-          **build/*.dylib
+          **build-win/*.dll \
+          **build-linux/*.so \
+          **build-mac/*.dylib
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -235,6 +235,6 @@ jobs:
           name: ${{ steps.tag.outputs.name }}
           tag_name: ${{ steps.tag.outputs.tag }}
           files: |
-            **build/*.dll
-            **build/*.so
-            **build/*.dylib
+            **build-win/*.dll
+            **build-linux/*.so
+            **build-mac/*.dylib
