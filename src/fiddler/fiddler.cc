@@ -27,10 +27,12 @@ extern "C" __declspec(dllexport) void f() {
 #endif
 
 #if defined(__linux__) || __APPLE__
+extern "C" {
 void initialize() {
-	
+	spdlog::info("libfiddler initialize");
 }
 void f() {
-	
+	spdlog::info("libfiddler f");
+}
 }
 #endif
