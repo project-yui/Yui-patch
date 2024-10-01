@@ -150,7 +150,7 @@ jobs:
 
     strategy:
       matrix:
-        arch: ['arm64']
+        arch: ['arm64', 'arm64e']
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -170,11 +170,25 @@ jobs:
           echo "tag result: $tag - $name"
           echo "::set-output name=tag::$tag"
           echo "::set-output name=name::$name"
-         
-      - name: run-vcpkg
+
+      - name: Prepare Arm64e
+        if: matrix.arch == 'arm64e'
+        run: |
+          node tools/prepare-arm64e.js
+
+      - name: run-vcpkg arm64
+        if: matrix.arch == 'arm64'
         uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
 
+      - name: run-vcpkg arm64e
+        if: matrix.arch == 'arm64e'
+        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
+        with:
+          vcpkgGitURL: https://github.com/msojocs/vcpkg.git
+
       - name: Build
+        env:
+          ACTION_OSX_ARCHITECTURES: ${{ matrix.arch }}
         run: |
           brew install ninja
           tools/mac/ci.sh ${{ matrix.arch }} ${{ steps.tag.outputs.tag }}
