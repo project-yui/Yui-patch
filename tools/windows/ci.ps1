@@ -14,7 +14,7 @@ try
             $Name = $_.BaseName
             $FullName = $_.FullName
             Write-Host $FullName
-            mv "$FullName" "$root_dir/tmp/build/yukihana-$Name-win32-$arch-$tag.dll"
+            mv "$FullName" "$root_dir/tmp/build/yui-$Name-win32-$arch-$tag.dll"
         }catch{
             Write-Host $_
         }

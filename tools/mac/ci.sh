@@ -13,5 +13,5 @@ mkdir -p "$root_dir/tmp/build"
 for file in "$root_dir/build/"*.dylib
 do
     name=$(basename $file)
-    mv $file "$root_dir/tmp/build/yukihana-${name%.*}-mac-$arch-$tag.dylib"
+    mv $file "$root_dir/tmp/build/yui-${name%.*}-mac-$arch-$tag.dylib"
 done

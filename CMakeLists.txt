@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0042 NEW)
 
-project("yukihana_patch" VERSION 1.0.4)
+project("yui_patch" VERSION 1.0.4)
 if(APPLE)
     message("MAC Processor: " ${CMAKE_SYSTEM_PROCESSOR})
     set(CMAKE_OSX_ARCHITECTURES ${CMAKE_SYSTEM_PROCESSOR})

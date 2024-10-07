@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-win
+          name: yui-${{ matrix.arch }}.build-win
           path: tmp/build
 
   build-linux:
@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-linux
+          name: yui-${{ matrix.arch }}.build-linux
           path: tmp/build
 
   build-mac-x86:
@@ -141,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-mac
+          name: yui-${{ matrix.arch }}.build-mac
           path: tmp/build
 
   build-mac-arm64:
@@ -197,7 +197,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # Artifact name
-          name: yukihana-${{ matrix.arch }}.build-mac
+          name: yui-${{ matrix.arch }}.build-mac
           path: tmp/build
 
   upload:

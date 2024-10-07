@@ -13,5 +13,5 @@ mkdir -p "$root_dir/tmp/build"
 for file in "$root_dir/build/"*.so
 do
     name=$(basename $file)
-    mv $file "$root_dir/tmp/build/yukihana-${name%.*}-linux-$arch-$tag.so"
+    mv $file "$root_dir/tmp/build/yui-${name%.*}-linux-$arch-$tag.so"
 done
