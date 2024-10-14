@@ -70,11 +70,11 @@ HANDLE WINAPI Hk_CreateFileW(
         if (directData.cur >= directData.start && directData.cur < directData.end)
         {
             spdlog::info("{} Redirect for: {}", directData.cur, filename);
-            directData.cur++;
             // 文件名
 
             const char	*strTmpPath = directData.target.c_str();
             spdlog::info("{} Redirect to: {}", directData.cur, strTmpPath);
+            directData.cur++;
 
             int cap = (strlen(strTmpPath) + 1) * sizeof(wchar_t);
             wchar_t *defaultIndex = (wchar_t *)malloc(cap);
@@ -95,7 +95,9 @@ HANDLE WINAPI Hk_CreateFileW(
             free(defaultIndex);
         }
         else {
-            spdlog::info("target: {}, cur: {}, start: {}, end: {}", directData.target, directData.cur, directData.start, directData.end);
+            spdlog::info("skip target: {}, cur: {}, start: {}, end: {}", directData.target, directData.cur, directData.start, directData.end);
+            directData.cur++;
+            config[filename.c_str()] = directData;
         }
         
     }
