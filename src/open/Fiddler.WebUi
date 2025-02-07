@@ -1,5 +1,0 @@
-#!/bin/bash
-# export DYLD_PRINT_LIBRARIES=1
-# export X=1
-export DYLD_INSERT_LIBRARIES=./libopen.dylib
-./Fiddler.WebUi1 $@

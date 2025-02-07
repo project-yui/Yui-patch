@@ -1,7 +1,4 @@
 if(MSVC)
-    add_subdirectory(hostpolicy)
     add_subdirectory(dbghelp)
-else()
-    add_subdirectory(open)
 endif()
 add_subdirectory(fiddler)
