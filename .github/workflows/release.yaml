@@ -129,9 +129,14 @@ jobs:
           echo "::set-output name=tag::$tag"
           echo "::set-output name=name::$name"
          
+      - name: Prepare Mac
+        run: |
+          node tools/prepare-arm64e.js
       - name: run-vcpkg
         uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
-
+        with:
+          vcpkgGitURL: https://github.com/msojocs/vcpkg.git
+          
       - name: Build
         run: |
           brew install ninja
@@ -171,17 +176,11 @@ jobs:
           echo "::set-output name=tag::$tag"
           echo "::set-output name=name::$name"
 
-      - name: Prepare Arm64e
-        if: matrix.arch == 'arm64e'
+      - name: Prepare Mac
         run: |
           node tools/prepare-arm64e.js
 
-      - name: run-vcpkg arm64
-        if: matrix.arch == 'arm64'
-        uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
-
       - name: run-vcpkg arm64e
-        if: matrix.arch == 'arm64e'
         uses: lukka/run-vcpkg@v11.5  # Option 2: specify 'latest' or 'latestrc' in the input version arguments:
         with:
           vcpkgGitURL: https://github.com/msojocs/vcpkg.git
