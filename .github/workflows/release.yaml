@@ -12,8 +12,8 @@ on:
     branches: [ master, dev, ci, mac]
   pull_request:
     branches: [ master ]
-  # # Allows you to run this workflow manually from the Actions tab
-  # workflow_dispatch:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   build-windows:
