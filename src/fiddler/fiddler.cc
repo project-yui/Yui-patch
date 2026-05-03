@@ -1,11 +1,45 @@
 
+#include <cstdlib>
 #include <spdlog/spdlog.h>
+#include <fstream>
+#include <string>
 #ifdef WIN32
 #include <windows.h>
 #include <winnt.h>
 #include "../include/info_check.hh"
 #endif
 
+bool fixPackageJson() {
+	const char* filepath = "resources/app/package.json";
+	std::ifstream in(filepath, std::ios::binary);
+	if (in)
+	{
+		std::string content((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+		in.close();
+
+		const std::string from = "main.original.js";
+		const std::string to = "main.js";
+		size_t pos = 0;
+		bool changed = false;
+		while ((pos = content.find(from, pos)) != std::string::npos)
+		{
+			content.replace(pos, from.size(), to);
+			pos += to.size();
+			changed = true;
+		}
+
+		if (changed)
+		{
+			std::ofstream out(filepath, std::ios::binary | std::ios::trunc);
+			if (out)
+			{
+				out.write(content.data(), static_cast<std::streamsize>(content.size()));
+			}
+			return true;
+		}
+	}
+	return false;
+}
 #ifdef WIN32
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
@@ -19,10 +53,16 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 
 
 extern "C" __declspec(dllexport) void initialize() {
-	
+	if (fixPackageJson()) {
+		MessageBoxA(NULL, "package.json was fixed, please restart", "libfiddler", MB_OK | MB_ICONINFORMATION);
+		exit(1);
+	}
 }
 extern "C" __declspec(dllexport) void f() {
-	
+	if (fixPackageJson()) {
+		MessageBoxA(NULL, "package.json was fixed, please restart", "libfiddler", MB_OK | MB_ICONINFORMATION);
+		exit(1);
+	}
 }
 #endif
 
@@ -30,9 +70,15 @@ extern "C" __declspec(dllexport) void f() {
 extern "C" {
 void initialize() {
 	spdlog::info("libfiddler initialize");
+	if (fixPackageJson()) {
+		spdlog::info("package.json was fixed, please restart");
+	}
 }
 void f() {
 	spdlog::info("libfiddler f");
+	if (fixPackageJson()) {
+		spdlog::info("package.json was fixed, please restart");
+	}
 }
 }
 #endif
