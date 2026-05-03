@@ -104,7 +104,7 @@ jobs:
 
   build-mac-x86:
     name: Build MAC
-    runs-on: macos-13
+    runs-on: macos-15-intel
 
     strategy:
       matrix:
